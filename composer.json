@@ -1,0 +1,25 @@
+{
+  "name": "tualo/termine",
+  "description": "tualo - termine",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Thomas Hoffmann",
+      "email": "thomas.hoffmann@tualo.de"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Tualo\\Office\\Termine\\": "src/"
+    },
+    "files": [
+      "src/functions.php"
+    ]
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "tualo/msgraph": "^1.0"
+  },
+  "version": "1.0.1"
+}
