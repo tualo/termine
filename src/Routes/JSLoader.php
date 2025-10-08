@@ -1,6 +1,6 @@
 <?php
 
-namespace Tualo\Office\MSGraph\Routes;
+namespace Tualo\Office\Termine\Routes;
 
 use Tualo\Office\Basic\TualoApplication as App;
 use Tualo\Office\Basic\RouteSecurityHelper;

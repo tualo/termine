@@ -4,7 +4,7 @@ Ext.define('Tualo.Termine.lazy.controller.View', {
 
     onBoxReady: function () {
         let me = this;
-        setTimeout(me.queryUser.bind(me), 1000)
+        // setTimeout(me.queryUser.bind(me), 1000)
     },
 
     queryUser: async function () {

@@ -23,117 +23,41 @@ Ext.define('Tualo.Termine.lazy.View', {
     items: [
 
         {
-            hidden: false,
-            xtype: 'panel',
-            itemId: 'startpanel',
-            layout: {
-                type: 'vbox',
-                align: 'center'
-            },
-            items: [
-                {
-                    xtype: 'component',
-                    cls: 'lds-container-compact',
-                    html: '<div class=" "><div class="blobs-container"><div class="blob gray"></div></div></div>'
-                        + '<div><h3>Microsoft Zugriff</h3>'
-                        + '<span>Einen Moment, die Daten werden geprüft.</span></div>'
+            xtype: 'calendar',
+            views: {
+                day: {
+                    startTime: 6,
+                    endTime: 22
+                },
+                month: {
+                    xtype: 'calendar-month',
+                    titleTpl: '{start:date("M Y")}',
+                    label: 'Monat',
+                    weight: 10,
+                    showHeader: true,
+                    showWeekNumbers: true,
+                    firstDayOfWeek: 1,
+                    visibleDays: 7,
+                    // compactView: true
+                },
+                workweek: {
+                    xtype: 'calendar-week',
+                    titleTpl: '{start:date("j M")} - {end:date("j M")}',
+                    label: 'Woche',
+                    weight: 15,
+                    dayHeaderFormat: 'D d',
+                    firstDayOfWeek: 1,
+                    visibleDays: 5
                 }
-            ]
-        },
-        {
-            hidden: true,
-            xtype: 'panel',
-            itemId: 'devicetoken',
-            layout: {
-                type: 'vbox',
-                align: 'center'
             },
-            items: [
-                {
-                    xtype: 'component',
-                    cls: 'lds-container-compact',
-                    bind: {
-                        html: '{devicetokenhtml}'
-                    }
+            store: {
+                autoLoad: true,
+                proxy: {
+                    type: 'ajax',
+                    url: './calendarview/calendars',
+                    yxurl: './termine/calendars',
                 }
-            ],
-            dockedItems: [{
-                xtype: 'toolbar',
-                dock: 'bottom',
-                items: [
-                    {
-                        xtype: 'button', text: 'Prüfen', bind: {
-                            handler: 'checkToken'
-                        }
-                    }
-                ]
-            }],
-        },
-        {
-            hidden: true,
-            xtype: 'panel',
-            itemId: 'user',
-            layout: {
-                type: 'vbox',
-                align: 'center'
-            },
-            items: [
-                {
-                    xtype: 'component',
-                    cls: 'lds-container-compact',
-                    bind: {
-                        html: '{userhtml}'
-                    }
-                }
-            ],
-            dockedItems: [{
-                xtype: 'toolbar',
-                dock: 'bottom',
-                items: [
-                    {
-                        xtype: 'button', text: 'Erneuern', bind: {
-                            handler: 'getDeviceToken'
-                        }
-                    }
-                ]
-            }]
-        },
-        {
-            hidden: true,
-            xtype: 'panel',
-            itemId: 'apiconfig',
-            layout: {
-                type: 'vbox',
-                align: 'center'
-            },
-            items: [
-                {
-                    xtype: 'form',
-                    items: [
-                        {
-                            xtype: 'textfield',
-                            fieldLabel: 'Client ID',
-                            bind: {
-                                value: '{client_id}'
-                            }
-                        },
-                        {
-                            xtype: 'textfield',
-                            fieldLabel: 'Tenant ID',
-                            bind: {
-                                value: '{tenant_id}'
-                            }
-                        },
-                        {
-                            xtype: 'button',
-                            text: 'Speichern',
-                            bind: {
-                                handler: 'saveConfig'
-                            }
-                        }
-                    ]
-                }
-            ]
+            }
         }
     ],
 
