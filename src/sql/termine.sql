@@ -33,16 +33,55 @@ create table if not exists termine (
     `is_manualy` tinyint(1) not null default 0,
     `last_sync` datetime default null,
     `subject` varchar(255) default null,
-    `body` text default null
+    `body` text default null,
+    `update_uuid` varchar(36),
+    `remind_minutes_before` int default 15
 );
+
+DELIMITER //
+
+CREATE TRIGGER IF NOT EXISTS `trigger_termine_bi_update_uuid`
+    BEFORE INSERT
+    ON `termine` FOR EACH ROW
+BEGIN
+    SET new.update_uuid = UUID();
+END //
+
+
+CREATE TRIGGER IF NOT EXISTS `trigger_termine_bu_update_uuid`
+    BEFORE UPDATE
+    ON `termine` FOR EACH ROW
+BEGIN
+    SET new.update_uuid = UUID();
+END //
+
+DELIMITER ;
 
 create table if not exists termine_category_assignment (
     `termin_id` varchar(36) not null,
     `category_id` varchar(36) not null,
+    `active` tinyint(1) not null default 1,
     primary key(`termin_id`,`category_id`),
     foreign key(`termin_id`) references termine(`id`) on delete cascade,
     foreign key(`category_id`) references termine_categories(`id`) on delete cascade
 );
+
+create or replace view view_readtable_termine_category_assignment as
+    select
+        termine_categories.id as category_id,
+        termine.id as termin_id,
+        ifnull(tca.active, 0) as active
+        
+    from
+
+        termine_categories
+        join termine
+
+        left join termine_category_assignment tca on tca.termin_id=termine.id
+            and tca.category_id=termine_categories.id
+;
+
+
 
 create table if not exists termine_calendar_assignment (
     `termin_id` varchar(36) not null,

@@ -16,12 +16,14 @@ class CalendarView implements IRoute
 
         BasicRoute::add('/calendarview/calendars', function ($matches) {
             try {
+
+                $list = [];
                 MSGraphTermine::refreshAccessToken();
                 $response = MSGraphTermine::getCalendars();
                 App::result('response', $response);
                 if ($response['statusCode'] == 200) {
 
-                    $list = [];
+
                     foreach ($response['value'] as $k => $v) {
                         $list[] = [
                             'id' => $v['id'],
@@ -35,46 +37,6 @@ class CalendarView implements IRoute
                             ]
                         ];
                     }
-
-
-                    /*
-                    $list[] = [
-                        'id' => '3122baca-a16d-11f0-a220-da899d326f66',
-                        'calendarId' => '3122baca-a16d-11f0-a220-da899d326f66',
-                        'title' => 'Privat',
-                        'eventStore' => [
-                            'proxy' => [
-                                'type' => 'ajax',
-                                'url' => './termine/calendars/3122baca-a16d-11f0-a220-da899d326f66/events'
-                            ]
-                        ]
-                    ];
-                    */
-
-                    try {
-                        $calendars = DSTable::instance('termine_calendars')->g();
-
-                        foreach ($calendars as $k => $v) {
-                            $list[] = [
-                                'id' => $v['id'],
-                                'calendarId' => $v['id'],
-                                'title' => $v['name'],
-                                'eventStore' => [
-                                    'proxy' => [
-                                        'type' => 'ajax',
-                                        'url' => './termine/calendars/' . $v['id'] . '/events'
-                                    ]
-                                ]
-                            ];
-                        }
-                        App::result('list', $list);
-                        App::jsonReturnField('list');
-                    } catch (\Exception $e) {
-                        App::result('error', $e->getMessage());
-                    }
-
-                    App::result('list', $list);
-                    App::jsonReturnField('list');
                 } else {
                     App::result('success', false);
                     App::result('error', $response['error']['message'] ?? 'Unknown error');
@@ -82,6 +44,35 @@ class CalendarView implements IRoute
             } catch (\Exception $e) {
                 App::result('error', $e->getMessage());
             }
+
+
+
+            try {
+                $calendars = DSTable::instance('termine_calendars')->g();
+
+                foreach ($calendars as $k => $v) {
+                    $list[] = [
+                        'id' => $v['id'],
+                        'calendarId' => $v['id'],
+                        'title' => $v['name'],
+                        'eventStore' => [
+                            'proxy' => [
+                                'type' => 'ajax',
+                                'url' => './termine/calendars/' . $v['id'] . '/events'
+                            ]
+                        ]
+                    ];
+                }
+                App::result('list', $list);
+                App::jsonReturnField('list');
+            } catch (\Exception $e) {
+                App::result('error', $e->getMessage());
+            }
+
+            App::result('list', $list);
+            App::jsonReturnField('list');
+
+
             App::contenttype('application/json');
         }, ['get'], true);
 

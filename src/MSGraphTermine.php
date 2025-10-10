@@ -15,6 +15,7 @@ use Microsoft\Kiota\Authentication\Oauth\AuthorizationCodeContext;
 
 use Ramsey\Uuid\Uuid;
 use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
 use League\OAuth2\Client\Token\AccessToken;
 
 
@@ -144,6 +145,81 @@ class MSGraphTermine extends API
             'http_errors' => false,
             'exceptions' => false
         ]);
+        $statusCode = $clientResponse->getStatusCode();
+        $response = json_decode($clientResponse->getBody()->getContents(), true);
+        $response['statusCode'] = $statusCode;
+
+        return $response;
+    }
+
+
+    /**
+     * {
+     *  "subject": "Let's go for lunch",
+     *  "body": {
+     *    "contentType": "HTML",
+     *    "content": "Does noon work for you?"
+     *  },
+     *  "start": {
+     *    "dateTime": "2017-04-15T12:00:00",
+     *    "timeZone": "Pacific Standard Time"
+     *  },
+     *  "end": {
+     *    "dateTime": "2017-04-15T14:00:00",
+     *    "timeZone": "Pacific Standard Time"
+     *  },
+     *  "location":{
+     *    "displayName":"Harry's Bar"
+     *  },
+     *  "attendees": [
+     *      {
+     *      "emailAddress": {
+     *          "address":"samanthab@contoso.com",
+     *          "name": "Samantha Booth"
+     *      },
+     *      "type": "required"
+     *      }
+     *  ],
+     *  "allowNewTimeProposals": true,
+     *  "transactionId":"7E163156-7762-4BEB-A1C6-729EA81755A7"
+     *  }
+     */
+    public static function createEvent(string $calendarId, array $eventData)
+    {
+        $tokenClient = self::getClient([
+            'authorization' => 'Bearer ' . self::env('access_token'),
+            'Content-Type' => 'application/json',
+        ]);
+        $url = self::graphURL() . '/me/calendars/' . $calendarId . '/events';
+
+        $clientResponse = $tokenClient->post($url, [
+            'http_errors' => false,
+            'exceptions' => false,
+            RequestOptions::JSON => $eventData
+        ]);
+
+        $statusCode = $clientResponse->getStatusCode();
+        $response = json_decode($clientResponse->getBody()->getContents(), true);
+        $response['statusCode'] = $statusCode;
+
+        return $response;
+    }
+
+    public static function updateEvent(string $calendarId, array $eventData)
+    {
+        $tokenClient = self::getClient([
+            'authorization' => 'Bearer ' . self::env('access_token'),
+            'Content-Type' => 'application/json',
+        ]);
+        $url = self::graphURL() . '/me/calendars/' . $calendarId . '/events/' . $eventData['id'];
+        print_r($eventData);
+
+        $clientResponse = $tokenClient->patch($url, [
+            'http_errors' => false,
+            'exceptions' => false,
+            RequestOptions::JSON => $eventData
+        ]);
+
         $statusCode = $clientResponse->getStatusCode();
         $response = json_decode($clientResponse->getBody()->getContents(), true);
         $response['statusCode'] = $statusCode;
