@@ -8,7 +8,7 @@ use Tualo\Office\Basic\Route as BasicRoute;
 use Tualo\Office\Basic\IRoute;
 use Tualo\Office\Termine\MSGraphTermine;
 
-class Test implements IRoute
+class Test extends \Tualo\Office\Basic\RouteWrapper
 {
     public static function register()
     {

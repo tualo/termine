@@ -9,7 +9,7 @@ use Tualo\Office\Basic\IRoute;
 use Tualo\Office\DS\DSTable;
 use Tualo\Office\Termine\MSGraphTermine;
 
-class Termine implements IRoute
+class Termine extends \Tualo\Office\Basic\RouteWrapper
 {
     public static function register()
     {
